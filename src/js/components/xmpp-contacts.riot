@@ -1,0 +1,51 @@
+<xmpp-contacts>
+    <div class="panel m-top-6" if={ state.contacts.length > 0 }>
+        <div class="bar">
+            <div class="bar__main">
+                Contacts
+            </div>
+        </div>
+        <div class="panel__body">
+            <ul>
+                <li each={ contact in state.contacts }>
+                    { contact.name }
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script>
+
+        import setupRoster from "@xmpp-plugins/roster"
+        import xmppStore from './../stores/xmpp.js'
+
+        export default {
+            state: {
+                contacts: []
+            },
+
+            onMounted() {
+                xmppStore.on('online', (address) => {
+                    const roster = setupRoster(xmppStore.xmpp)
+
+                    roster.get().then(roster => {
+                        if (!roster) {
+                            // the roster hasn't changed since last version
+                            return
+                        }
+
+                        const { version, items } = roster
+
+                        this.state.contacts = items
+                        this.update()
+                    })
+                })
+
+                xmppStore.on('offline', (address) => {
+                    this.state.contacts = []
+                    this.update()
+                })
+            }
+        }
+
+    </script>
+</xmpp-contacts>

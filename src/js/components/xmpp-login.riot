@@ -1,0 +1,142 @@
+<xmpp-login>
+    <div class="panel m-top-6">
+        <div class="bar">
+            <div class="bar__start">
+                Account
+            </div>
+        </div>
+        <div class="panel__body">
+            <form onsubmit={ (event) => { state.validator.submit(event) }} if={ !state.isOnline }>
+                <div class="field-group">
+                    <label class="field-label">
+                        Service
+                        <input type="text" class="field-text" name="service" />
+                        <field-error name="service"></field-error>
+                    </label>
+                </div>
+                <div class="field-group">
+                    <label class="field-label">
+                        Username
+                        <input type="text" class="field-text" name="username" />
+                        <field-error name="username"></field-error>
+                    </label>
+                </div>
+                <div class="field-group">
+                    <label class="field-label">
+                        Password
+                        <input type="password" class="field-text" name="password" />
+                        <field-error name="password"></field-error>
+                    </label>
+                </div>
+                <div class="loading" if={ state.isLoading }>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="m-top-4">
+                    <button class="button button--full button--success center w-100" disabled={ state.isLoading } type="submit">
+                        Send
+                    </button>
+                </div>
+            </form>
+            <div if={ state.isOnline }>
+                <button class="button button--full button--danger center w-100 m-bottom-0" type="button" onclick={ (event) => {  handleLogout(event) } }>
+                    Logout
+                </button>
+            </diV>
+        </div>
+    </div>
+    <script>
+
+        import * as riot from 'riot'
+
+        import FormValidator from '@tiny-components/validator/src/formValidator.js'
+
+        import FieldError from '@tiny-components/validator/src/fieldError.riot'
+        riot.register('field-error', FieldError)
+
+        import xmppStore from './../stores/xmpp.js'
+
+        /**
+         *  show login form to connect
+         *
+         */
+        export default {
+
+            state: {
+                isLoading: false,
+                isOnline: false,
+                validator: false
+            },
+
+            onMounted() {
+
+                this.createForm()
+
+                xmppStore.on('error', (error) => {
+                    console.log(error)
+                })
+
+                xmppStore.on('online', () => {
+                    this.isLoading = false
+
+                    this.state.isOnline = true
+                    this.state.validator = false
+
+                    this.update()
+                })
+
+                xmppStore.on('offline', () => {
+                    this.isLoading = false
+                    this.state.isOnline = false
+
+                    this.update()
+
+                    this.createForm()
+                })
+            },
+
+            /**
+             *
+             *
+             */
+            createForm() {
+                this.state.validator = new FormValidator(this.$('form'), {
+                    'service': {
+                        'presence': true
+                    },
+                    'username': {
+                        'presence': true
+                    },
+                    'password': {
+                        'presence': true
+                    }
+                }, true)
+
+                this.state.validator.onError((event) => {
+                    this.isLoading = false
+                    this.update()
+                })
+
+                this.state.validator.onSuccess((event, data) => {
+                    event.preventDefault()
+
+                    this.isLoading = true
+                    this.update()
+
+                    xmppStore.login(data.username, data.password, data.service)
+                })
+            },
+
+            /**
+             *
+             *
+             */
+            handleLogout()
+            {
+                xmppStore.logout()
+            }
+        }
+
+    </script>
+</xmpp-login>

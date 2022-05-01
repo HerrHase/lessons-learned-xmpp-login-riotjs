@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "dependencies": {
+    "@riotjs/observable": "^4.1.1",
+    "@tiny-components/plain-ui": "^0.6.0",
+    "@tiny-components/validator": "^0.2.0",
+    "@xmpp-plugins/roster": "^1.2.0",
+    "@xmpp/client": "^0.13.1",
+    "riot": "^6.1.2"
+  },
+  "devDependencies": {
+    "@riotjs/webpack-loader": "^6.0.0",
+    "laravel-mix": "^6.0.43",
+    "laravel-mix-purgecss": "^6.0.0",
+    "sass": "^1.51.0",
+    "sass-loader": "^12.6.0",
+    "svg-spritemap-webpack-plugin": "^4.4.0"
+  }
+}
