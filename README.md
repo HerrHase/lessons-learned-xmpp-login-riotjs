@@ -1,7 +1,7 @@
 # xmpp-login-riotjs
 
 Small Prototyp to show login to an XMPP-Server with [xmpp.js](https://github.com/xmppjs/xmpp.js) and retrieve Contacts from Account. Frontend is written in Riotjs, this
-only tested for an Connection with Websocket (wss://<domain>/xmpp-websocket). The Configuration is below.
+only tested for an Connection with Websocket (wss://\<domain\>/xmpp-websocket). The Configuration is below.
 
 ## Configuration
 
